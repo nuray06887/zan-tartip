@@ -473,7 +473,7 @@
             box-shadow: 0 15px 40px rgba(255, 215, 0, 0.5);
         }
         
-        /* Мобильді беттер */
+        /* Мобильді бет - ТЕК АТ ЖАЗАТЫН */
         .mobile-join-screen {
             position: fixed;
             top: 0;
@@ -557,6 +557,7 @@
             font-size: 1.1rem;
         }
         
+        /* Сәтті қосылған бет */
         .success-screen {
             position: fixed;
             top: 0;
@@ -664,12 +665,12 @@
         </div>
     </div>
 
-    <!-- СӘТТІ ҚОСЫЛҒАННАН КЕЙІНГІ БЕТ -->
+    <!-- СӘТТІ ҚОСЫЛҒАННАН КЕЙІНГІ БЕТ (ТЕЛЕФОНДА) -->
     <div id="successScreen" class="success-screen" style="display: none;">
         <div class="success-card">
             <i class="fas fa-check-circle"></i>
             <h2>РАХМЕТ!</h2>
-            <p>Ойын басталды,<br>сәттілік тілейміз! 🍀</p>
+            <p>Сәтті тіркелдіңіз!<br>Ойын сәтті өтсін! 🍀</p>
             <button class="close-btn" onclick="document.getElementById('successScreen').style.display='none'">
                 <i class="fas fa-times"></i> ЖАБУ
             </button>
@@ -714,18 +715,22 @@
 
                 <div class="players-box">
                     <h3>
-                        <i class="fas fa-user-plus"></i> ОЙЫНШЫЛАР
+                        <i class="fas fa-user-plus"></i> ҚАТЫСУШЫЛАР
                         <span class="player-count-badge" id="playerCount">0</span>
                     </h3>
                     
-                    <div class="player-input-area">
-                        <input type="text" id="playerNameInput" placeholder="Ойыншының атын жазыңыз">
-                        <button id="addPlayerBtn"><i class="fas fa-plus"></i> ҚОСУ</button>
+                    <!-- ҮЛКЕН ЭКРАНДАҒЫ ҚАТЫСУШЫЛАР ТІЗІМІ -->
+                    <div id="onlinePlayersList" class="participants-grid">
+                        <!-- Қатысушылар осында көрінеді -->
                     </div>
                     
-                    <!-- Қатысушылар тізімі -->
-                    <div id="onlinePlayersList" class="participants-grid">
-                        <!-- Қатысушылар динамикалық қосылады -->
+                    <!-- Қолмен қосу (керек болса) -->
+                    <div style="margin-top: 20px;">
+                        <h4 style="color: #B0C4DE; margin-bottom: 10px;">Қолмен қосу:</h4>
+                        <div class="player-input-area">
+                            <input type="text" id="playerNameInput" placeholder="Ойыншының атын жазыңыз">
+                            <button id="addPlayerBtn"><i class="fas fa-plus"></i> ҚОСУ</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -764,13 +769,137 @@
                 </button>
             </div>
         </div>
+
+        <!-- НЕГІЗГІ ОЙЫН ТАҚТАСЫ -->
+        <div class="game-container" id="gameContainer" style="display: none;">
+            <div class="header">
+                <div class="character">
+                    <span class="character-avatar"><i class="fas fa-scale-balanced"></i></span>
+                    <span class="character-text" id="owlMessage">💰 Мен өз құқығымды білемін!</span>
+                </div>
+                <div class="current-team" id="currentTeamDisplay">1-ТОП</div>
+            </div>
+            <div id="gameBoard"></div>
+            <div class="question-counter" id="questionCounter"></div>
+        </div>
+    </div>
+
+    <!-- СҰРАҚ МОДАЛІ -->
+    <div class="modal" id="questionModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="modalCategory"><i class="fas fa-gavel"></i> Категория · <span id="modalPoints">10</span> БАЛЛ</span>
+                <span class="timer" id="timerDisplay">30</span>
+            </div>
+            <div class="question-text" id="modalQuestion">Сұрақ жүктелуде...</div>
+            <div class="answers-grid" id="answersContainer"></div>
+            <div class="modal-footer">
+                <div class="help-buttons">
+                    <button class="help-btn" id="fiftyFiftyBtn"><i class="fas fa-divide"></i> 50/50</button>
+                    <button class="help-btn" id="lawButton"><i class="fas fa-book"></i> ЗАҢ</button>
+                </div>
+                <button class="close-modal" id="closeModalBtn"><i class="fas fa-times"></i> ЖАБУ</button>
+            </div>
+            <div class="law-box" id="lawBox">ҚР Конституциясының бабы</div>
+        </div>
     </div>
 
     <div id="warningContainer"></div>
 
     <script>
         (function() {
-            // Элементтер
+            // БАРЛЫҚ СҰРАҚТАР
+            const baseQuestions = [
+                // БІЛІМ (4 сұрақ)
+                { category: 0, points: 10, categoryName: '📚 БІЛІМ',
+                  question: 'Қазақстанда орта білім алу тегін бе?',
+                  options: ['А) Иә, мемлекеттік мектептерде тегін', 'Б) Жоқ, барлық мектептер ақылы', 'В) Тек бастауыш сыныптар тегін', 'Г) Тек дарынды балаларға тегін'],
+                  correct: 0,
+                  lawHint: 'ҚР Конституциясы 30-бап: "Орта білім алу тегін".' },
+                { category: 0, points: 20, categoryName: '📚 БІЛІМ',
+                  question: 'Мұғалім оқушыны сабақтан шығарып жіберсе, оқушының қайта сабаққа кіруге құқығы бар ма?',
+                  options: ['А) Иә, білім алу құқығы бұзылмауы керек', 'Б) Жоқ, тәртіп бұзса кіргізбеуге болады', 'В) Тек ата-анасы келгенде ғана', 'Г) Тек директор рұқсатымен'],
+                  correct: 0,
+                  lawHint: '"Білім туралы" Заң 8-бап: Оқушыны сабақтан шығаруға тыйым салынады.' },
+                { category: 0, points: 30, categoryName: '📚 БІЛІМ',
+                  question: 'Мектеп директоры мұғалімді аттестациядан өтпегені үшін жұмыстан шығара ала ма?',
+                  options: ['А) Иә, аттестация міндетті', 'Б) Жоқ, тек мұғалімнің өз келісімімен', 'В) Тек білім бөлімінің шешімімен', 'Г) Жоқ, аттестация заңсыз'],
+                  correct: 1,
+                  lawHint: '"Мұғалім мәртебесі" Заңы 8-бап: Аттестация нәтижесімен жұмыстан шығаруға болмайды.' },
+                { category: 0, points: 40, categoryName: '📚 БІЛІМ',
+                  question: 'Инклюзивті білім беру туралы заңға сәйкес, мектеп ерекше қажеттіліктері бар баланы қабылдаудан бас тартса, қандай жауапкершілік көзделген?',
+                  options: ['А) Әкімшілік айыппұл', 'Б) Қылмыстық жауапкершілік', 'В) Ешқандай, мектептің құқығы', 'Г) Тек ескерту'],
+                  correct: 0,
+                  lawHint: 'ҚР ӘҚБтК 85-бап: Инклюзивті білім беруден бас тартқаны үшін айыппұл.' },
+
+                // ОТБАСЫ (4 сұрақ)
+                { category: 1, points: 10, categoryName: '👪 ОТБАСЫ',
+                  question: 'Неке қию үшін ең төменгі жас қандай?',
+                  options: ['А) 16 жас', 'Б) 18 жас', 'В) 20 жас', 'Г) 21 жас'],
+                  correct: 1,
+                  lawHint: '"Неке және отбасы" кодексі 10-бап: Неке жасы 18.' },
+                { category: 1, points: 20, categoryName: '👪 ОТБАСЫ',
+                  question: 'Ата-анасы ажырасқан кезде, бала негізінен кіммен қалады?',
+                  options: ['А) Әкесімен', 'Б) Анасымен', 'В) Сот баланың мүддесін ескере отырып шешеді', 'Г) Ата-әжесімен'],
+                  correct: 2,
+                  lawHint: '"Неке және отбасы" кодексі 74-бап: Баланың мүддесі бірінші орында.' },
+                { category: 1, points: 30, categoryName: '👪 ОТБАСЫ',
+                  question: 'Ата-анасының біреуі баланы алимент төлемегені үшін шетелге шығара алмайды деген шектеу заңды ма?',
+                  options: ['А) Иә, сот орындаушысы шектей алады', 'Б) Жоқ, бұл конституциялық құқықты бұзу', 'В) Тек 10 млн теңгеден асқан борыш болса', 'Г) Тек екі жылдан артық төлемесе'],
+                  correct: 0,
+                  lawHint: 'ҚР "Атқарушылық іс жүргізу" Заңы 33-бап: Борышкерді шетелге шығаруға уақытша шектеу.' },
+                { category: 1, points: 40, categoryName: '👪 ОТБАСЫ',
+                  question: 'Егер ата-ана баласын тәрбиелеу міндетін орындамаса және бұл баланың өміріне қауіп төндірсе, қандай шара қолданылады?',
+                  options: ['А) Ата-ана құқығынан айыру', 'Б) Әкімшілік жауапкершілік', 'В) Қылмыстық жауапкершілік', 'Г) Барлық жауапкершілік түрі'],
+                  correct: 3,
+                  lawHint: 'ҚК 119-бап (қауіпті жағдайда қалдыру), ӘҚБтК 127-бап, Неке кодексі 75-бап.' },
+
+                // ДЕНСАУЛЫҚ (4 сұрақ)
+                { category: 2, points: 10, categoryName: '🏥 ДЕНСАУЛЫҚ',
+                  question: 'Медициналық көмек алу тегін бе?',
+                  options: ['А) Тек жедел жәрдем тегін', 'Б) Иә, мемлекеттік емханаларда негізгі көмек тегін', 'В) Барлық қызмет ақылы', 'Г) Тек зейнеткерлерге тегін'],
+                  correct: 1,
+                  lawHint: '"Халық денсаулығы" кодексі 19-бап: Тегін медициналық көмектің кепілдік берілген көлемі.' },
+                { category: 2, points: 20, categoryName: '🏥 ДЕНСАУЛЫҚ',
+                  question: 'Дәрігер науқастың құпия диагнозын жария ете ала ма?',
+                  options: ['А) Иә, туыстарына айтуы керек', 'Б) Жоқ, бұл медициналық құпия', 'В) Тек полиция сұрағанда', 'Г) Тек сот шешімімен'],
+                  correct: 1,
+                  lawHint: 'Кодекс 149-бап: Дәрігерлік құпия - науқастың келісімінсіз жария етуге болмайды.' },
+                { category: 2, points: 30, categoryName: '🏥 ДЕНСАУЛЫҚ',
+                  question: 'Науқасқа дұрыс ем қойылмағандықтан науқастың жағдайы нашарласа, қандай жауапкершілік туындайды?',
+                  options: ['А) Тек тәртіптік жауапкершілік', 'Б) Азаматтық-құқықтық (зиянды өтеу)', 'В) Тек қылмыстық жауапкершілік', 'Г) Ешқандай жауапкершілік жоқ'],
+                  correct: 1,
+                  lawHint: 'ҚР Азаматтық кодексі 917-бап: Денсаулыққа келтірілген зиянды өтеу.' },
+                { category: 2, points: 40, categoryName: '🏥 ДЕНСАУЛЫҚ',
+                  question: 'Эвтаназияға (науқастың өтініші бойынша өлімге әкелетін әрекет) Қазақстанда рұқсат бар ма?',
+                  options: ['А) Иә, науқастың жазбаша келісімімен', 'Б) Жоқ, тыйым салынған, қылмыстық жауапкершілік бар', 'В) Тек туыстары келіссе рұқсат', 'Г) Тек сот шешімімен'],
+                  correct: 1,
+                  lawHint: 'ҚК 102-бап (кісі өлтіру) және "Халық денсаулығы" кодексі 156-бап: Эвтаназияға тыйым.' },
+
+                // ҚОҒАМ (4 сұрақ)
+                { category: 3, points: 10, categoryName: '🏛 ҚОҒАМ',
+                  question: 'Қазақстан Республикасының Конституциясы қашан қабылданды?',
+                  options: ['А) 1991 жылы', 'Б) 1995 жылы', 'В) 2000 жылы', 'Г) 1993 жылы'],
+                  correct: 1,
+                  lawHint: 'ҚР Конституциясы 1995 жылы 30 тамызда қабылданды.' },
+                { category: 3, points: 20, categoryName: '🏛 ҚОҒАМ',
+                  question: 'Сайлауға қатысу құқығы (белсенді сайлау құқығы) қанша жастан басталады?',
+                  options: ['А) 16 жас', 'Б) 18 жас', 'В) 21 жас', 'Г) 25 жас'],
+                  correct: 1,
+                  lawHint: 'Конституция 33-бап және "Сайлау туралы" Заң: 18 жастан бастап дауыс беру құқығы.' },
+                { category: 3, points: 30, categoryName: '🏛 ҚОҒАМ',
+                  question: 'Полиция қызметкері азаматтың жеке басын куәландыратын құжатын тексеру кезінде қандай негіз болуы керек?',
+                  options: ['А) Кез келген уақытта тексере алады', 'Б) Құқық бұзушылық жасады деген негізді күдік', 'В) Тек жазбаша рұқсатпен', 'Г) Тек прокуратура санкциясымен'],
+                  correct: 1,
+                  lawHint: 'Әкімшілік кодекс 27.1-бап: Тексеру үшін негізді күдік болуы керек.' },
+                { category: 3, points: 40, categoryName: '🏛 ҚОҒАМ',
+                  question: 'Адам құқықтары жөніндегі уәкілді (омбудсменді) кім тағайындайды?',
+                  options: ['А) Президент', 'Б) Парламент Сенаты', 'В) Парламент Мәжілісі', 'Г) Конституциялық Сот'],
+                  correct: 0,
+                  lawHint: '"Адам құқықтары жөніндегі уәкіл туралы" Заң 10-бап: Президент тағайындайды.' },
+            ];
+
+            // ЭЛЕМЕНТТЕР
             const playerNameInput = document.getElementById('playerNameInput');
             const addPlayerBtn = document.getElementById('addPlayerBtn');
             const onlinePlayersList = document.getElementById('onlinePlayersList');
@@ -780,6 +909,12 @@
             const clearAllBtn = document.getElementById('clearAllBtn');
             const teamsOutput = document.getElementById('teamsOutput');
             const startGameContainer = document.getElementById('startGameContainer');
+            const startGameBtn = document.getElementById('startGameBtn');
+            const gameContainer = document.getElementById('gameContainer');
+            const gameBoard = document.getElementById('gameBoard');
+            const owlMessage = document.getElementById('owlMessage');
+            const questionCounter = document.getElementById('questionCounter');
+            const currentTeamDisplay = document.getElementById('currentTeamDisplay');
             
             // Мобильді элементтер
             const mobileJoinScreen = document.getElementById('mobileJoinScreen');
@@ -788,9 +923,30 @@
             const mobileJoinBtn = document.getElementById('mobileJoinBtn');
             const mobileTimer = document.getElementById('mobileTimer');
             
+            // Модаль элементтері
+            const questionModal = document.getElementById('questionModal');
+            const modalCategory = document.getElementById('modalCategory');
+            const modalQuestion = document.getElementById('modalQuestion');
+            const answersContainer = document.getElementById('answersContainer');
+            const lawBox = document.getElementById('lawBox');
+            const lawButton = document.getElementById('lawButton');
+            const fiftyFiftyBtn = document.getElementById('fiftyFiftyBtn');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const timerSpan = document.getElementById('timerDisplay');
+            
             // Қатысушылар тізімі
             let participants = [];
             let teams = [];
+            let questions = [];
+            let usedQuestions = [];
+            let currentTeamIndex = 0;
+            let totalQuestions = 0;
+            let questionsPerTeam = 0;
+            let timerInterval = null;
+            let currentQuestionIndex = null;
+            let hasAnswered = false;
+            let fiftyFiftyUsed = false;
+            let modalActive = false;
 
             // QR код генерациясы
             const siteUrl = "https://nuray06887.github.io/zan-tartip/";
@@ -800,7 +956,7 @@
                 height: 150
             });
 
-            // ТЕЛЕФОНДАН КІРГЕНДІ ТЕКСЕРУ
+            // ТЕЛЕФОННАН КІРГЕНДІ ТЕКСЕРУ
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('join') === 'true') {
                 mobileJoinScreen.style.display = 'flex';
@@ -832,7 +988,7 @@
                     
                     setTimeout(() => {
                         successScreen.style.display = 'none';
-                    }, 5000);
+                    }, 3000);
                     
                     showWarning('Қосылдыңыз! ✅');
                 } else {
@@ -846,7 +1002,7 @@
                 }
             });
 
-            // Қатысушылар тізімін жаңарту
+            // Қатысушылар тізімін жаңарту (ҮЛКЕН ЭКРАНДА КӨРІНУ ҮШІН)
             function updateOnlineList() {
                 let html = '';
                 participants.forEach((name) => {
@@ -870,6 +1026,7 @@
                 if (name && !participants.includes(name)) {
                     participants.push(name);
                     updateOnlineList();
+                    showWarning(`"${name}" қосылды! ✅`);
                 }
             }
 
@@ -899,31 +1056,6 @@
                 return arr;
             }
 
-            shuffleBtn.addEventListener('click', () => {
-                if (participants.length === 0) {
-                    showWarning('Қатысушылар жоқ!');
-                    return;
-                }
-                
-                const teamCount = parseInt(teamCountSelect.value);
-                let shuffledParticipants = shuffleArray([...participants]);
-                
-                const teamMembers = Array.from({ length: teamCount }, () => []);
-                for (let i = 0; i < shuffledParticipants.length; i++) {
-                    const teamIndex = i % teamCount;
-                    teamMembers[teamIndex].push(shuffledParticipants[i]);
-                }
-                
-                teams = teamMembers.map((members, index) => ({
-                    name: `${index+1}-ТОП`,
-                    members: members,
-                    score: 0
-                }));
-                
-                displayTeams(teams);
-                showWarning('Топтарға бөлінді! ✅');
-            });
-
             function displayTeams(teamsData) {
                 let html = '';
                 for (let i = 0; i < teamsData.length; i++) {
@@ -943,12 +1075,119 @@
                 startGameContainer.style.display = 'flex';
             }
 
+            function generateQuestionsForTeamCount(teamCount) {
+                const categories = 4;
+                const points = [10, 20, 30, 40];
+                
+                let totalNeeded = teamCount;
+                while (totalNeeded < 16) {
+                    totalNeeded += teamCount;
+                }
+                if (totalNeeded > 24) totalNeeded = 24;
+                
+                const questionsList = [];
+                for (let i = 0; i < totalNeeded; i++) {
+                    const categoryIndex = i % categories;
+                    const pointIndex = Math.floor(i / categories) % 4;
+                    const question = baseQuestions.find(q => 
+                        q.category === categoryIndex && q.points === points[pointIndex]
+                    );
+                    if (question) {
+                        questionsList.push({ ...question, id: i });
+                    }
+                }
+                return questionsList;
+            }
+
+            function renderBoard() {
+                let html = '<div class="categories">';
+                const catNames = ['📚 БІЛІМ', '👪 ОТБАСЫ', '🏥 ДЕНСАУЛЫҚ', '🏛 ҚОҒАМ'];
+                
+                for (let cat = 0; cat < 4; cat++) {
+                    html += '<div class="category-col">';
+                    html += `<div class="category-title">${catNames[cat]}</div>`;
+
+                    const catQuestions = questions.filter(q => q.category === cat);
+                    catQuestions.sort((a, b) => a.points - b.points);
+                    
+                    catQuestions.forEach((q) => {
+                        const globalIndex = questions.findIndex(qq => qq.id === q.id);
+                        const disabledClass = usedQuestions[globalIndex] ? 'disabled' : '';
+                        const statusIcon = usedQuestions[globalIndex] ? 
+                            '<div class="status-icon answered"><i class="fas fa-check"></i></div>' : 
+                            '<div class="status-icon unanswered"><i class="fas fa-hourglass"></i></div>';
+                        
+                        html += `<div class="card-question ${disabledClass}" data-qindex="${globalIndex}">
+                            ${statusIcon}
+                            ${q.points} <small>БАЛЛ</small>
+                        </div>`;
+                    });
+                    html += '</div>';
+                }
+                html += '</div>';
+                
+                const totalAnswered = usedQuestions.filter(v => v === true).length;
+                const remainingQuestions = questions.length - totalAnswered;
+                
+                html += `<div style="display: flex; justify-content: center; gap: 30px; margin-top: 20px; color: white; font-size: 1.2rem;">
+                    <div><span class="status-dot answered" style="margin-right: 8px;"></span> Жауап берілген: ${totalAnswered}</div>
+                    <div><span class="status-dot unanswered" style="margin-right: 8px;"></span> Қалғаны: ${remainingQuestions}</div>
+                </div>`;
+                
+                gameBoard.innerHTML = html;
+            }
+
+            shuffleBtn.addEventListener('click', () => {
+                if (participants.length === 0) {
+                    showWarning('Қатысушылар жоқ!');
+                    return;
+                }
+                
+                const teamCount = parseInt(teamCountSelect.value);
+                let shuffledParticipants = shuffleArray([...participants]);
+                
+                const teamMembers = Array.from({ length: teamCount }, () => []);
+                for (let i = 0; i < shuffledParticipants.length; i++) {
+                    const teamIndex = i % teamCount;
+                    teamMembers[teamIndex].push(shuffledParticipants[i]);
+                }
+                
+                teams = teamMembers.map((members, index) => ({
+                    name: `${index+1}-ТОП`,
+                    members: members,
+                    score: 0,
+                    correct: 0,
+                    wrong: 0
+                }));
+                
+                displayTeams(teams);
+                questions = generateQuestionsForTeamCount(teamCount);
+                totalQuestions = questions.length;
+                questionsPerTeam = totalQuestions / teamCount;
+                questions = shuffleArray(questions);
+                usedQuestions = new Array(questions.length).fill(false);
+                
+                showWarning(`${totalQuestions} сұрақ дайындалды. Әр командаға ${questionsPerTeam} сұрақтан.`);
+            });
+
             clearAllBtn.addEventListener('click', () => {
                 teamsOutput.innerHTML = '';
                 startGameContainer.style.display = 'none';
+                gameContainer.style.display = 'none';
                 participants = [];
                 teams = [];
                 updateOnlineList();
+            });
+
+            startGameBtn.addEventListener('click', () => {
+                if (teams.length === 0) {
+                    showWarning('Алдымен топтарға бөліңіз!');
+                    return;
+                }
+                gameContainer.style.display = 'block';
+                renderBoard();
+                updateOwlMessage(`${currentTeamIndex+1}-ТОП, СҰРАҚ ТАҢДА! 🎯`);
+                questionCounter.textContent = `📊 Барлығы ${totalQuestions} сұрақ | Әр командаға ${questionsPerTeam} сұрақтан`;
             });
 
             function showWarning(message) {
@@ -964,6 +1203,10 @@
                         container.removeChild(warning);
                     }
                 }, 2000);
+            }
+
+            function updateOwlMessage(text) {
+                owlMessage.innerHTML = `💰 ${text}`;
             }
 
             // Бастапқы тізімді көрсету
