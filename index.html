@@ -153,10 +153,119 @@
         .qr-instruction li {
             margin-bottom: 10px;
         }
+        
+        /* ЖАҢА: Тек атын жазатын бет (телефонға арналған) */
+        .mobile-join-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0B1026, #1A1F3A);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .mobile-join-card {
+            background: #1C2542;
+            border-radius: 30px;
+            padding: 40px 30px;
+            max-width: 400px;
+            width: 100%;
+            border: 3px solid #FFD700;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);
+            text-align: center;
+        }
+        
+        .mobile-join-card i {
+            font-size: 5rem;
+            color: #FFD700;
+            margin-bottom: 20px;
+        }
+        
+        .mobile-join-card h2 {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .mobile-join-card p {
+            color: #B0C4DE;
+            margin-bottom: 30px;
+        }
+        
+        .mobile-join-input {
+            width: 100%;
+            padding: 18px;
+            border-radius: 15px;
+            border: 2px solid #FFD700;
+            background: #0F152A;
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .mobile-join-input:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        
+        .mobile-join-btn {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            border-radius: 15px;
+            padding: 18px;
+            color: #0B1026;
+            font-weight: 800;
+            font-size: 1.3rem;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+        }
+        
+        .mobile-join-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+        
+        .mobile-timer {
+            margin-top: 20px;
+            color: #FFD700;
+            font-size: 1.1rem;
+        }
+        
+        /* ЖАҢА: Үлкен экранда бәрі қалыпты */
+        .main-content {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .law-title {
+                font-size: 2.5rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="main-wrapper">
+    <!-- ЖАҢА: ТЕЛЕФОНДАҒЫ ТЕК АТ ЖАЗАТЫН ЭКРАН -->
+    <div id="mobileJoinScreen" class="mobile-join-screen" style="display: none;">
+        <div class="mobile-join-card">
+            <i class="fas fa-scale-balanced"></i>
+            <h2>ЗАҢ ЖӘНЕ ТӘРТІП</h2>
+            <p>Ойынға қосылу үшін атыңызды жазыңыз</p>
+            <input type="text" id="mobileNameInput" class="mobile-join-input" placeholder="Атыңыз" autofocus>
+            <button id="mobileJoinBtn" class="mobile-join-btn">
+                <i class="fas fa-paper-plane"></i> ЖІБЕРУ
+            </button>
+            <div class="mobile-timer" id="mobileTimer">30 секунд</div>
+        </div>
+    </div>
+
+    <div class="main-wrapper" id="mainContent">
         <!-- ТЕК БАСЫ -->
         <div class="law-header">
             <div class="law-title">ЗАҢ ЖӘНЕ ТӘРТІП</div>
@@ -257,27 +366,6 @@
             <div id="gameBoard"></div>
             <div class="question-counter" id="questionCounter"></div>
             <div id="finishScreen" style="display: none;"></div>
-        </div>
-    </div>
-
-    <!-- QR КОД АРҚЫЛЫ ҚОСЫЛУ ҮШІН МОДАЛЬ (ТЕК ТЕЛЕФОНДА КӨРІНЕДІ) -->
-    <div class="modal" id="qrJoinModal">
-        <div class="modal-content" style="max-width: 400px;">
-            <div class="modal-header">
-                <span style="color: #FFD700;"><i class="fas fa-qrcode"></i> ҚОСЫЛУ</span>
-                <span class="timer" id="qrTimer">30</span>
-            </div>
-            <div style="padding: 30px; text-align: center;">
-                <i class="fas fa-user-plus" style="font-size: 4rem; color: #FFD700; margin-bottom: 20px;"></i>
-                <h3 style="color: white; margin-bottom: 20px;">Ойынға қосылу</h3>
-                <input type="text" id="qrPlayerName" placeholder="Атыңызды жазыңыз" style="width: 100%; padding: 15px; border-radius: 10px; border: 2px solid #FFD700; background: #1E2740; color: white; margin-bottom: 20px; font-size: 1.1rem;">
-                <button id="qrSubmitBtn" style="background: linear-gradient(135deg, #FFD700, #FFA500); border: none; border-radius: 10px; padding: 15px 30px; color: #0B1026; font-weight: 700; font-size: 1.2rem; cursor: pointer; width: 100%;">
-                    <i class="fas fa-paper-plane"></i> ЖІБЕРУ
-                </button>
-            </div>
-            <div class="modal-footer">
-                <button class="close-modal" id="closeQrModalBtn"><i class="fas fa-times"></i> ЖАБУ</button>
-            </div>
         </div>
     </div>
 
@@ -411,12 +499,11 @@
             const onlinePlayersList = document.getElementById('onlinePlayersList');
             const playerCountSpan = document.getElementById('playerCount');
             
-            // QR код элементтері
-            const qrJoinModal = document.getElementById('qrJoinModal');
-            const qrPlayerName = document.getElementById('qrPlayerName');
-            const qrSubmitBtn = document.getElementById('qrSubmitBtn');
-            const closeQrModalBtn = document.getElementById('closeQrModalBtn');
-            const qrTimer = document.getElementById('qrTimer');
+            // ЖАҢА: Мобильді элементтер
+            const mobileJoinScreen = document.getElementById('mobileJoinScreen');
+            const mobileNameInput = document.getElementById('mobileNameInput');
+            const mobileJoinBtn = document.getElementById('mobileJoinBtn');
+            const mobileTimer = document.getElementById('mobileTimer');
             
             // Модаль элементтері
             const modal = document.getElementById('questionModal');
@@ -436,9 +523,9 @@
             let usedQuestions = [];
             let currentQuestionIndex = null;
             let timerInterval = null;
-            let qrTimerInterval = null;
+            let mobileTimerInterval = null;
             let timeLeft = 30;
-            let qrTimeLeft = 30;
+            let mobileTimeLeft = 30;
             let modalActive = false;
             let hasAnswered = false;
             let fiftyFiftyUsed = false;
@@ -460,54 +547,50 @@
                 height: 150
             });
 
-            // ТЕК ТЕЛЕФОНДА: URL параметрін тексеру
+            // ТЕЛЕФОНДАН КІРГЕНДІ ТЕКСЕРУ
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('join') === 'true') {
-                // Телефоннан кіргенде ғана модаль ашылады
-                openQrModal();
+                // Телефоннан кіргенде - тек атын жазатын бетті көрсет
+                document.getElementById('mainContent').style.display = 'none';
+                mobileJoinScreen.style.display = 'flex';
+                startMobileTimer();
             }
 
-            // QR модальды ашу (тек телефонда)
-            function openQrModal() {
-                console.log("Телефоннан қосылу...");
-                qrJoinModal.classList.add('active');
-                qrPlayerName.value = '';
-                qrTimeLeft = 30;
-                qrTimer.textContent = qrTimeLeft;
+            // Мобильді таймер
+            function startMobileTimer() {
+                mobileTimeLeft = 30;
+                mobileTimer.textContent = mobileTimeLeft + ' секунд';
                 
-                if (qrTimerInterval) clearInterval(qrTimerInterval);
-                qrTimerInterval = setInterval(() => {
-                    qrTimeLeft--;
-                    qrTimer.textContent = qrTimeLeft;
-                    if (qrTimeLeft <= 0) {
-                        clearInterval(qrTimerInterval);
-                        qrJoinModal.classList.remove('active');
+                if (mobileTimerInterval) clearInterval(mobileTimerInterval);
+                mobileTimerInterval = setInterval(() => {
+                    mobileTimeLeft--;
+                    mobileTimer.textContent = mobileTimeLeft + ' секунд';
+                    if (mobileTimeLeft <= 0) {
+                        clearInterval(mobileTimerInterval);
+                        mobileJoinScreen.style.display = 'none';
+                        document.getElementById('mainContent').style.display = 'block';
                     }
                 }, 1000);
             }
 
-            // QR арқылы қосу
-            qrSubmitBtn.addEventListener('click', () => {
-                const name = qrPlayerName.value.trim();
+            // Мобильді қосу
+            mobileJoinBtn.addEventListener('click', () => {
+                const name = mobileNameInput.value.trim();
                 if (name) {
                     addParticipant(name);
                     showWarning('Қосылдыңыз! ✅');
-                    qrJoinModal.classList.remove('active');
-                    clearInterval(qrTimerInterval);
+                    mobileJoinScreen.style.display = 'none';
+                    document.getElementById('mainContent').style.display = 'block';
+                    clearInterval(mobileTimerInterval);
                 } else {
                     showWarning('Атыңызды жазыңыз!');
                 }
             });
 
-            qrPlayerName.addEventListener('keypress', (e) => {
+            mobileNameInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
-                    qrSubmitBtn.click();
+                    mobileJoinBtn.click();
                 }
-            });
-
-            closeQrModalBtn.addEventListener('click', () => {
-                qrJoinModal.classList.remove('active');
-                clearInterval(qrTimerInterval);
             });
 
             // Қатысушылар тізімін жаңарту
