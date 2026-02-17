@@ -1287,16 +1287,42 @@
                 width: 150,
                 height: 150
             });
+// LocalStorage-дан қатысушыларды оқу
+function loadParticipants() {
+    const saved = localStorage.getItem('gameParticipants');
+    if (saved) {
+        participants = JSON.parse(saved);
+    } else {
+        participants = [];
+    }
+    updateOnlineList();
+}
 
-            // ТЕЛЕФОННАН КІРГЕНДІ ТЕКСЕРУ
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('join') === 'true') {
-                // Бастапқыда жасыру
-                document.querySelector('.main-wrapper').style.display = 'none';
-                mobileJoinScreen.style.display = 'flex';
-                startMobileTimer();
-            }
-
+// LocalStorage-ға сақтау
+function saveParticipants() {
+    localStorage.setItem('gameParticipants', JSON.stringify(participants));
+}
+// ТЕЛЕФОННАН КІРГЕНДІ ТЕКСЕРУ
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('join') === 'true') {
+    // Бастапқыда жасыру
+    document.querySelector('.main-wrapper').style.display = 'none';
+    mobileJoinScreen.style.display = 'flex';
+    startMobileTimer();
+    
+    // LocalStorage-дан қатысушыларды жүктеу
+    loadParticipants();
+} else {
+    // Үлкен экранда LocalStorage-дан оқу
+    loadParticipants();
+    
+    // Өзгерістерді бақылау (басқа қойындыдан)
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'gameParticipants') {
+            loadParticipants();
+        }
+    });
+}
             // Мобильді таймер
             function startMobileTimer() {
                 let mobileTimeLeft = 30;
@@ -1312,15 +1338,24 @@
                     }
                 }, 1000);
             }
-
-            // Мобильді қосу
-            mobileJoinBtn.addEventListener('click', () => {
-                const name = mobileNameInput.value.trim();
-                if (name) {
-                    addParticipant(name);
-                    mobileJoinScreen.style.display = 'none';
-                    successScreen.style.display = 'flex';
-                    
+// Мобильді қосу
+mobileJoinBtn.addEventListener('click', () => {
+    const name = mobileNameInput.value.trim();
+    if (name) {
+        addParticipant(name);
+        mobileJoinScreen.style.display = 'none';
+        successScreen.style.display = 'flex';
+        
+        setTimeout(() => {
+            successScreen.style.display = 'none';
+            document.querySelector('.main-wrapper').style.display = 'block';
+        }, 3000);
+        
+        showWarning(`"${name}" қосылды! ✅`);
+    } else {
+        showWarning('Атыңызды жазыңыз!');
+    }
+});
                     // 3 секундтан кейін сәттілік бетін жауып, негізгі бетті көрсету
                     setTimeout(() => {
                         successScreen.style.display = 'none';
@@ -1362,16 +1397,15 @@
                 onlinePlayersList.innerHTML = html;
                 playerCountSpan.textContent = participants.length;
             }
-
             // Қатысушы қосу
             function addParticipant(name) {
                 if (name && !participants.includes(name)) {
                     participants.push(name);
+                    saveParticipants(); // LocalStorage-ға сақтау
                     updateOnlineList();
                     showWarning(`"${name}" қосылды! ✅`);
                 }
             }
-
             // Батырма арқылы қосу (үлкен экранда)
             addPlayerBtn.addEventListener('click', () => {
                 const name = playerNameInput.value.trim();
@@ -1826,3 +1860,4 @@
     </script>
 </body>
 </html>
+
