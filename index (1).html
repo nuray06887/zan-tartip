@@ -453,13 +453,13 @@
             // Қатысушылар тізімі
             let participants = [];
 
-            // QR код генерациясы
-            const currentUrl = window.location.href;
-            new QRCode(document.getElementById("qrcode"), {
-                text: currentUrl + "?join=true",
-                width: 150,
-                height: 150
-            });
+           // QR код генерациясы
+const siteUrl = "https://nuray06887.github.io/zan-tartip/";
+new QRCode(document.getElementById("qrcode"), {
+    text: siteUrl + "?join=true",
+    width: 150,
+    height: 150
+});
 
             // URL параметрін тексеру (телефоннан кіргенде)
             const urlParams = new URLSearchParams(window.location.search);
