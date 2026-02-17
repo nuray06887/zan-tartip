@@ -486,6 +486,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            display: none;
         }
         
         .mobile-join-card {
@@ -570,6 +571,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            display: none;
         }
         
         .success-card {
@@ -597,8 +599,9 @@
         
         .success-card p {
             color: #B0C4DE;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             margin-bottom: 30px;
+            line-height: 1.5;
         }
         
         .success-card .close-btn {
@@ -610,6 +613,328 @@
             font-weight: 700;
             font-size: 1.2rem;
             cursor: pointer;
+        }
+        
+        .game-container {
+            background: rgba(18, 25, 45, 0.95);
+            border-radius: 20px;
+            border: 1px solid #2A3A5A;
+            overflow: hidden;
+            margin-top: 25px;
+            display: none;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1E2A47, #141C32);
+            padding: 18px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #3A4A6A;
+        }
+        
+        .character {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .character-avatar {
+            width: 50px;
+            height: 50px;
+            background: #FFD700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #0B1026;
+        }
+        
+        .character-text {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .current-team {
+            background: #FFD700;
+            color: #0B1026;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+        
+        #gameBoard {
+            padding: 30px;
+        }
+        
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        .category-col {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .category-title {
+            background: #2A3F5A;
+            color: #FFD700;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .card-question {
+            background: #1C2542;
+            border: 2px solid #2F3F60;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            color: #E0E8FF;
+            font-weight: 700;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .card-question:hover:not(.disabled) {
+            transform: translateY(-5px);
+            border-color: #FFD700;
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+        }
+        
+        .card-question.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .status-icon {
+            position: absolute;
+            left: 10px;
+            font-size: 1rem;
+        }
+        
+        .answered i {
+            color: #4CAF50;
+        }
+        
+        .unanswered i {
+            color: #FFA500;
+        }
+        
+        .status-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .status-dot.answered {
+            background: #4CAF50;
+        }
+        
+        .status-dot.unanswered {
+            background: #FFA500;
+        }
+        
+        .question-counter {
+            text-align: center;
+            color: #B0C4DE;
+            padding: 0 30px 20px 30px;
+            font-size: 1rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #1C2542;
+            border-radius: 30px;
+            width: 90%;
+            max-width: 800px;
+            border: 3px solid #FFD700;
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #1E2A47, #141C32);
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #3A4A6A;
+        }
+        
+        #modalCategory {
+            color: #FFD700;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .timer {
+            background: #0B1026;
+            color: #FFD700;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+        
+        .question-text {
+            padding: 30px;
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 600;
+            line-height: 1.5;
+            text-align: center;
+        }
+        
+        .answers-grid {
+            padding: 0 25px 25px 25px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .answer-btn {
+            background: #2A3455;
+            border: 2px solid #3F4A6A;
+            border-radius: 50px;
+            padding: 15px 20px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .answer-btn:hover:not(.disabled) {
+            background: #3A4575;
+            border-color: #FFD700;
+            transform: translateX(5px);
+        }
+        
+        .answer-btn.correct {
+            background: #4CAF50;
+            border-color: #45a049;
+        }
+        
+        .answer-btn.wrong {
+            background: #f44336;
+            border-color: #d32f2f;
+        }
+        
+        .answer-btn.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .prefix {
+            background: #FFD700;
+            color: #0B1026;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+        
+        .modal-footer {
+            padding: 20px 25px;
+            display: flex;
+            gap: 15px;
+            border-top: 2px solid #2A3A5A;
+        }
+        
+        .help-btn {
+            background: #2A3F5A;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 25px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .help-btn:hover:not(.disabled) {
+            background: #3A4F6A;
+            transform: translateY(-2px);
+        }
+        
+        .help-btn.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .close-modal {
+            background: #f44336;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 25px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+        
+        .close-modal:hover {
+            background: #d32f2f;
+        }
+        
+        .law-box {
+            background: #0F152A;
+            color: #FFD700;
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: 0.3s;
+            text-align: center;
+            font-weight: 500;
+            border-top: 2px solid #2A3A5A;
+        }
+        
+        .law-box.show {
+            padding: 20px;
+            max-height: 200px;
         }
         
         #warningContainer {
@@ -647,12 +972,18 @@
             .qr-container {
                 flex-direction: column;
             }
+            .categories {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .answers-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <!-- ТЕЛЕФОНДАҒЫ ТЕК АТ ЖАЗАТЫН ЭКРАН -->
-    <div id="mobileJoinScreen" class="mobile-join-screen" style="display: none;">
+    <div id="mobileJoinScreen" class="mobile-join-screen">
         <div class="mobile-join-card">
             <i class="fas fa-scale-balanced"></i>
             <h2>ЗАҢ ЖӘНЕ ТӘРТІП</h2>
@@ -666,12 +997,12 @@
     </div>
 
     <!-- СӘТТІ ҚОСЫЛҒАННАН КЕЙІНГІ БЕТ (ТЕЛЕФОНДА) -->
-    <div id="successScreen" class="success-screen" style="display: none;">
+    <div id="successScreen" class="success-screen">
         <div class="success-card">
             <i class="fas fa-check-circle"></i>
             <h2>РАХМЕТ!</h2>
-            <p>Сәтті тіркелдіңіз!<br>Ойын сәтті өтсін! 🍀</p>
-            <button class="close-btn" onclick="document.getElementById('successScreen').style.display='none'">
+            <p>Ойын басталды,<br>сәттілік тілейміз! 🍀</p>
+            <button class="close-btn" id="closeSuccessBtn">
                 <i class="fas fa-times"></i> ЖАБУ
             </button>
         </div>
@@ -708,7 +1039,7 @@
                         <ul>
                             <li><i class="fas fa-1"></i> QR кодты телефонмен сканерлеңіз</li>
                             <li><i class="fas fa-2"></i> Атыңызды жазып, ЖІБЕРУ батырмасын басыңыз</li>
-                            <li><i class="fas fa-3"></i> Автоматты түрде тізімге қосыласыз</li>
+                            <li><i class="fas fa-3"></i> Атыңыз үлкен экранда пайда болады</li>
                         </ul>
                     </div>
                 </div>
@@ -724,7 +1055,7 @@
                         <!-- Қатысушылар осында көрінеді -->
                     </div>
                     
-                    <!-- Қолмен қосу (керек болса) -->
+                    <!-- Қолмен қосу -->
                     <div style="margin-top: 20px;">
                         <h4 style="color: #B0C4DE; margin-bottom: 10px;">Қолмен қосу:</h4>
                         <div class="player-input-area">
@@ -771,7 +1102,7 @@
         </div>
 
         <!-- НЕГІЗГІ ОЙЫН ТАҚТАСЫ -->
-        <div class="game-container" id="gameContainer" style="display: none;">
+        <div class="game-container" id="gameContainer">
             <div class="header">
                 <div class="character">
                     <span class="character-avatar"><i class="fas fa-scale-balanced"></i></span>
@@ -785,7 +1116,7 @@
     </div>
 
     <!-- СҰРАҚ МОДАЛІ -->
-    <div class="modal" id="questionModal" style="display: none;">
+    <div class="modal" id="questionModal">
         <div class="modal-content">
             <div class="modal-header">
                 <span id="modalCategory"><i class="fas fa-gavel"></i> Категория · <span id="modalPoints">10</span> БАЛЛ</span>
@@ -922,6 +1253,7 @@
             const mobileNameInput = document.getElementById('mobileNameInput');
             const mobileJoinBtn = document.getElementById('mobileJoinBtn');
             const mobileTimer = document.getElementById('mobileTimer');
+            const closeSuccessBtn = document.getElementById('closeSuccessBtn');
             
             // Модаль элементтері
             const questionModal = document.getElementById('questionModal');
@@ -959,6 +1291,8 @@
             // ТЕЛЕФОННАН КІРГЕНДІ ТЕКСЕРУ
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('join') === 'true') {
+                // Бастапқыда жасыру
+                document.querySelector('.main-wrapper').style.display = 'none';
                 mobileJoinScreen.style.display = 'flex';
                 startMobileTimer();
             }
@@ -974,6 +1308,7 @@
                     if (mobileTimeLeft <= 0) {
                         clearInterval(timerInterval);
                         mobileJoinScreen.style.display = 'none';
+                        document.querySelector('.main-wrapper').style.display = 'block';
                     }
                 }, 1000);
             }
@@ -986,11 +1321,13 @@
                     mobileJoinScreen.style.display = 'none';
                     successScreen.style.display = 'flex';
                     
+                    // 3 секундтан кейін сәттілік бетін жауып, негізгі бетті көрсету
                     setTimeout(() => {
                         successScreen.style.display = 'none';
+                        document.querySelector('.main-wrapper').style.display = 'block';
                     }, 3000);
                     
-                    showWarning('Қосылдыңыз! ✅');
+                    showWarning(`"${name}" қосылды! ✅`);
                 } else {
                     showWarning('Атыңызды жазыңыз!');
                 }
@@ -1000,6 +1337,11 @@
                 if (e.key === 'Enter') {
                     mobileJoinBtn.click();
                 }
+            });
+
+            closeSuccessBtn.addEventListener('click', () => {
+                successScreen.style.display = 'none';
+                document.querySelector('.main-wrapper').style.display = 'block';
             });
 
             // Қатысушылар тізімін жаңарту (ҮЛКЕН ЭКРАНДА КӨРІНУ ҮШІН)
@@ -1060,10 +1402,10 @@
                 let html = '';
                 for (let i = 0; i < teamsData.length; i++) {
                     const team = teamsData[i];
-                    html += `<div class="team-card">
+                    html += `<div class="team-card" data-team-index="${i}">
                         <div class="team-title">
                             ${i+1}-ТОП
-                            <span class="team-score">0 Б</span>
+                            <span class="team-score" id="team-score-${i}">${team.score} Б</span>
                         </div>
                         <div class="team-members">`;
                     team.members.forEach(member => {
@@ -1097,6 +1439,25 @@
                     }
                 }
                 return questionsList;
+            }
+
+            function updateTeamsDisplay() {
+                for (let i = 0; i < teams.length; i++) {
+                    const scoreSpan = document.getElementById(`team-score-${i}`);
+                    if (scoreSpan) {
+                        scoreSpan.textContent = teams[i].score + ' Б';
+                    }
+                }
+                
+                document.querySelectorAll('.team-card').forEach(card => {
+                    card.classList.remove('active-team');
+                });
+                const activeCard = document.querySelector(`.team-card[data-team-index="${currentTeamIndex}"]`);
+                if (activeCard) {
+                    activeCard.classList.add('active-team');
+                }
+                
+                currentTeamDisplay.textContent = `${currentTeamIndex+1}-ТОП`;
             }
 
             function renderBoard() {
@@ -1135,6 +1496,226 @@
                 </div>`;
                 
                 gameBoard.innerHTML = html;
+
+                document.querySelectorAll('.card-question').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        if (teams.length === 0) {
+                            showWarning('Командалар жоқ!');
+                            return;
+                        }
+                        const idx = card.dataset.qindex;
+                        if (usedQuestions[idx] === true) {
+                            showWarning('БҰЛ СҰРАҚҚА ЖАУАП БЕРІЛГЕН! ✅');
+                            return;
+                        }
+                        openQuestionModal(parseInt(idx));
+                    });
+                });
+            }
+
+            function openQuestionModal(qIndex) {
+                if (modalActive) return;
+                currentQuestionIndex = qIndex;
+                const q = questions[qIndex];
+                modalCategory.innerHTML = `<i class="fas fa-gavel"></i> ${q.categoryName} · <span id="modalPoints">${q.points}</span> БАЛЛ`;
+                modalQuestion.innerText = q.question;
+                lawBox.innerText = q.lawHint;
+                lawBox.classList.remove('show');
+                lawButton.innerHTML = '<i class="fas fa-book"></i> ЗАҢ';
+                hasAnswered = false;
+                fiftyFiftyUsed = false;
+                fiftyFiftyBtn.classList.remove('disabled');
+                
+                let answersHtml = '';
+                q.options.forEach((opt, i) => {
+                    const prefix = String.fromCharCode(65 + i);
+                    answersHtml += `<div class="answer-btn" data-opt-index="${i}"><span class="prefix">${prefix}</span> ${opt}</div>`;
+                });
+                answersContainer.innerHTML = answersHtml;
+
+                document.querySelectorAll('.answer-btn').forEach(btn => {
+                    btn.addEventListener('click', onAnswerClick);
+                });
+
+                let timeLeft = 30;
+                timerSpan.innerText = timeLeft;
+                if (timerInterval) clearInterval(timerInterval);
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    timerSpan.innerText = timeLeft;
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        if (questionModal.classList.contains('active') && currentQuestionIndex !== null) {
+                            handleTimeout();
+                        }
+                    }
+                }, 1000);
+
+                questionModal.classList.add('active');
+                modalActive = true;
+            }
+
+            function onAnswerClick(e) {
+                const selectedDiv = e.currentTarget;
+                const selectedIdx = parseInt(selectedDiv.dataset.optIndex);
+                const q = questions[currentQuestionIndex];
+                const isCorrect = (selectedIdx === q.correct);
+
+                document.querySelectorAll('.answer-btn').forEach(btn => btn.style.pointerEvents = 'none');
+
+                if (isCorrect) {
+                    selectedDiv.classList.add('correct');
+                    teams[currentTeamIndex].score += q.points;
+                    teams[currentTeamIndex].correct++;
+                    updateOwlMessage(`ДҰРЫС! 🎉 +${q.points} БАЛЛ (${currentTeamIndex+1}-ТОП)`);
+                } else {
+                    selectedDiv.classList.add('wrong');
+                    teams[currentTeamIndex].wrong++;
+                    document.querySelectorAll('.answer-btn').forEach(btn => {
+                        if (parseInt(btn.dataset.optIndex) === q.correct) {
+                            btn.classList.add('correct');
+                        }
+                    });
+                    updateOwlMessage(`ҚАТЕ! 😕 ЗАҢ БАБЫН ОҚЫ (${currentTeamIndex+1}-ТОП)`);
+                }
+
+                hasAnswered = true;
+                fiftyFiftyBtn.classList.add('disabled');
+
+                usedQuestions[currentQuestionIndex] = true;
+                
+                currentTeamIndex = (currentTeamIndex + 1) % teams.length;
+                
+                updateTeamsDisplay();
+                
+                clearInterval(timerInterval);
+            }
+
+            function handleTimeout() {
+                const q = questions[currentQuestionIndex];
+                document.querySelectorAll('.answer-btn').forEach(btn => btn.style.pointerEvents = 'none');
+                document.querySelectorAll('.answer-btn').forEach(btn => {
+                    if (parseInt(btn.dataset.optIndex) === q.correct) {
+                        btn.classList.add('correct');
+                    }
+                });
+                
+                hasAnswered = true;
+                fiftyFiftyBtn.classList.add('disabled');
+                
+                usedQuestions[currentQuestionIndex] = true;
+                teams[currentTeamIndex].wrong++;
+                updateOwlMessage(`УАҚЫТ БІТТІ! ⏰ ЗАҢ БАБЫН ОҚЫ (${currentTeamIndex+1}-ТОП)`);
+                
+                currentTeamIndex = (currentTeamIndex + 1) % teams.length;
+                
+                updateTeamsDisplay();
+                
+                clearInterval(timerInterval);
+            }
+
+            fiftyFiftyBtn.addEventListener('click', () => {
+                if (!hasAnswered && !fiftyFiftyUsed) {
+                    const q = questions[currentQuestionIndex];
+                    const answerBtns = document.querySelectorAll('.answer-btn');
+                    const correctIndex = q.correct;
+                    
+                    let wrongIndices = [];
+                    for (let i = 0; i < answerBtns.length; i++) {
+                        if (i !== correctIndex) wrongIndices.push(i);
+                    }
+                    
+                    const shuffle = wrongIndices.sort(() => 0.5 - Math.random());
+                    const remove1 = shuffle[0];
+                    const remove2 = shuffle[1];
+                    
+                    answerBtns[remove1].classList.add('disabled');
+                    answerBtns[remove2].classList.add('disabled');
+                    
+                    fiftyFiftyUsed = true;
+                    fiftyFiftyBtn.classList.add('disabled');
+                    showWarning('50/50 ҚОЛДАНЫЛДЫ! ✨');
+                } else if (hasAnswered) {
+                    showWarning('ЖАУАП БЕРІП БОЛДЫҢЫЗ!');
+                } else if (fiftyFiftyUsed) {
+                    showWarning('50/50 ҚОЛДАНЫЛДЫ!');
+                }
+            });
+
+            lawButton.addEventListener('click', () => {
+                if (!hasAnswered) {
+                    showWarning('АЛДЫМЕН ЖАУАП БЕРІҢІЗ! ⚠️');
+                    return;
+                }
+                
+                lawBox.classList.toggle('show');
+                if (lawBox.classList.contains('show')) {
+                    lawButton.innerHTML = '<i class="fas fa-book-open"></i> ЗАҢ';
+                } else {
+                    lawButton.innerHTML = '<i class="fas fa-book"></i> ЗАҢ';
+                }
+            });
+
+            closeModalBtn.addEventListener('click', () => {
+                questionModal.classList.remove('active');
+                modalActive = false;
+                lawBox.classList.remove('show');
+                clearInterval(timerInterval);
+                renderBoard();
+                
+                if (usedQuestions.every(v => v === true)) {
+                    showFinalResults();
+                } else {
+                    if (teams.length > 0) {
+                        updateOwlMessage(`${currentTeamIndex+1}-ТОП, СҰРАҚ ТАҢДА! 🎯`);
+                    }
+                }
+            });
+
+            function showFinalResults() {
+                const sortedTeams = [...teams].sort((a, b) => b.score - a.score);
+                
+                let medalHtml = '';
+                if (sortedTeams.length > 0) {
+                    medalHtml += `<div class="rank-1">🥇 1-ОРЫН: ${sortedTeams[0].name} - ${sortedTeams[0].score} БАЛЛ (${sortedTeams[0].correct}/${sortedTeams[0].correct + sortedTeams[0].wrong} ДҰРЫС)</div>`;
+                }
+                if (sortedTeams.length > 1) {
+                    medalHtml += `<div class="rank-2">🥈 2-ОРЫН: ${sortedTeams[1].name} - ${sortedTeams[1].score} БАЛЛ (${sortedTeams[1].correct}/${sortedTeams[1].correct + sortedTeams[1].wrong} ДҰРЫС)</div>`;
+                }
+                if (sortedTeams.length > 2) {
+                    medalHtml += `<div class="rank-3">🥉 3-ОРЫН: ${sortedTeams[2].name} - ${sortedTeams[2].score} БАЛЛ (${sortedTeams[2].correct}/${sortedTeams[2].correct + sortedTeams[2].wrong} ДҰРЫС)</div>`;
+                }
+                
+                let statsHtml = '<div class="stats-table">';
+                sortedTeams.forEach((team, idx) => {
+                    const total = team.correct + team.wrong;
+                    const percent = total > 0 ? Math.round((team.correct / total) * 100) : 0;
+                    statsHtml += `
+                        <div class="stats-row">
+                            <span>${idx+1}. ${team.name}</span>
+                            <span>${team.score} БАЛЛ | ${team.correct}/${total} ДҰРЫС | ${percent}%</span>
+                        </div>
+                    `;
+                });
+                statsHtml += '</div>';
+                
+                const finishHtml = `
+                    <div class="finish-screen">
+                        <h2>ОЙЫН АЯҚТАЛДЫ!</h2>
+                        <div class="medal">🏆</div>
+                        ${medalHtml}
+                        <h3 style="margin-top: 30px; color: #FFD700;">📊 ТОЛЫҚ СТАТИСТИКА:</h3>
+                        ${statsHtml}
+                        <button class="restart-btn" id="restartGame">
+                            <i class="fas fa-undo-alt"></i> ҚАЙТА ОЙНАУ
+                        </button>
+                    </div>
+                `;
+                gameBoard.innerHTML = finishHtml;
+                
+                document.getElementById('restartGame').addEventListener('click', () => {
+                    location.reload();
+                });
             }
 
             shuffleBtn.addEventListener('click', () => {
@@ -1160,6 +1741,7 @@
                     wrong: 0
                 }));
                 
+                currentTeamIndex = 0;
                 displayTeams(teams);
                 questions = generateQuestionsForTeamCount(teamCount);
                 totalQuestions = questions.length;
@@ -1168,6 +1750,7 @@
                 usedQuestions = new Array(questions.length).fill(false);
                 
                 showWarning(`${totalQuestions} сұрақ дайындалды. Әр командаға ${questionsPerTeam} сұрақтан.`);
+                updateTeamsDisplay();
             });
 
             clearAllBtn.addEventListener('click', () => {
@@ -1211,6 +1794,34 @@
 
             // Бастапқы тізімді көрсету
             updateOnlineList();
+
+            // Бастапқы тақтаны көрсету
+            function renderEmptyBoard() {
+                let html = '<div class="categories">';
+                const catNames = ['📚 БІЛІМ', '👪 ОТБАСЫ', '🏥 ДЕНСАУЛЫҚ', '🏛 ҚОҒАМ'];
+                
+                for (let cat = 0; cat < 4; cat++) {
+                    html += '<div class="category-col">';
+                    html += `<div class="category-title">${catNames[cat]}</div>`;
+                    
+                    for (let i = 0; i < 4; i++) {
+                        html += `<div class="card-question disabled" style="opacity: 0.3;">
+                            <div class="status-icon unanswered"><i class="fas fa-hourglass"></i></div>
+                            ${[10,20,30,40][i]} <small>БАЛЛ</small>
+                        </div>`;
+                    }
+                    html += '</div>';
+                }
+                html += '</div>';
+                
+                html += `<div style="display: flex; justify-content: center; gap: 30px; margin-top: 20px; color: white; font-size: 1.2rem;">
+                    <div><span class="status-dot unanswered" style="margin-right: 8px;"></span> Алдымен қатысушыларды қосып, топтарға бөліңіз</div>
+                </div>`;
+                
+                gameBoard.innerHTML = html;
+            }
+
+            renderEmptyBoard();
         })();
     </script>
 </body>
