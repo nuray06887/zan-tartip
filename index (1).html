@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- QR код библиотекасы -->
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-    <!-- ТЕК БАСЫНА АРНАЛҒАН СТИЛЬ (БАСҚА ЕШТЕҢГЕ ТИІСПЕЙМІН) -->
+    <!-- ТЕК БАСЫНА АРНАЛҒАН СТИЛЬ -->
     <style>
         .law-header {
             text-align: center;
@@ -103,7 +103,7 @@
             50% { text-shadow: 0 0 40px #FFD700, 0 0 60px #FFA500; }
         }
         
-        /* QR код стилі (тек осы бөлікке ғана) */
+        /* QR код стилі */
         .qr-container {
             display: flex;
             align-items: center;
@@ -157,7 +157,7 @@
 </head>
 <body>
     <div class="main-wrapper">
-        <!-- ТЕК БАСЫ ӨЗГЕРТІЛДІ - ҚАЛҒАНЫ ТҮП-ТҮЗДЕЙ -->
+        <!-- ТЕК БАСЫ -->
         <div class="law-header">
             <div class="law-title">ЗАҢ ЖӘНЕ ТӘРТІП</div>
             <div class="law-subtitle">Мен өз құқығымды білемін!</div>
@@ -168,14 +168,14 @@
             </div>
         </div>
 
-        <!-- ҚАТЫСУШЫЛАРДЫ ҚОСУ БӨЛІМІ (QR код қосылған) -->
+        <!-- ҚАТЫСУШЫЛАРДЫ ҚОСУ БӨЛІМІ -->
         <div class="join-section" id="joinSection">
             <div class="join-header">
                 <i class="fas fa-users"></i> ҚАТЫСУШЫЛАРДЫ ТІРКЕУ
             </div>
             
             <div class="join-container">
-                <!-- ЖАҢА: QR КОД БЛОГЫ -->
+                <!-- QR КОД БЛОГЫ -->
                 <div class="qr-container">
                     <div class="qr-box">
                         <h4><i class="fas fa-qrcode"></i> QR КОД</h4>
@@ -210,7 +210,7 @@
             </div>
         </div>
 
-        <!-- ТОП РАНДОМАЙЗЕРІ (ТҮП-ТҮЗДЕЙ) -->
+        <!-- ТОП РАНДОМАЙЗЕРІ -->
         <div class="team-randomizer-section" id="teamRandomizer">
             <div class="randomizer-header">
                 <i class="fas fa-users-between-lines"></i> ТОПҚА БӨЛУ
@@ -244,11 +244,10 @@
             </div>
         </div>
 
-        <!-- НЕГІЗГІ ОЙЫН (ТҮП-ТҮЗДЕЙ) -->
+        <!-- НЕГІЗГІ ОЙЫН -->
         <div class="game-container" id="gameContainer">
             <div class="header">
                 <div class="character">
-                    <!-- ТЕК МЫНАУ ӨЗГЕРТІЛДІ: корона орнына таразы -->
                     <span class="character-avatar"><i class="fas fa-scale-balanced"></i></span>
                     <span class="character-text" id="owlMessage">💰 Мен өз құқығымды білемін!</span>
                 </div>
@@ -261,7 +260,7 @@
         </div>
     </div>
 
-    <!-- ЖАҢА: QR КОД АРҚЫЛЫ ҚОСЫЛУ ҮШІН МОДАЛЬ -->
+    <!-- QR КОД АРҚЫЛЫ ҚОСЫЛУ ҮШІН МОДАЛЬ -->
     <div class="modal" id="qrJoinModal">
         <div class="modal-content" style="max-width: 400px;">
             <div class="modal-header">
@@ -305,7 +304,7 @@
 
     <script>
         (function() {
-            // СҰРАҚТАРДЫҢ БАЗАСЫ (әр категориядан 4 сұрақ, барлығы 16 сұрақ)
+            // СҰРАҚТАРДЫҢ БАЗАСЫ
             const baseQuestions = [
                 // БІЛІМ (4 сұрақ)
                 { category: 0, points: 10, categoryName: '📚 БІЛІМ',
@@ -453,22 +452,22 @@
             // Қатысушылар тізімі
             let participants = [];
 
-           // QR код генерациясы
-const siteUrl = "https://nuray06887.github.io/zan-tartip/";
-new QRCode(document.getElementById("qrcode"), {
-    text: siteUrl + "?join=true",
-    width: 150,
-    height: 150
-});
+            // ЖАҢА: QR код генерациясы (ТҮЗЕТІЛГЕН)
+            const siteUrl = "https://nuray06887.github.io/zan-tartip/";
+            new QRCode(document.getElementById("qrcode"), {
+                text: siteUrl + "?join=true",
+                width: 150,
+                height: 150
+            });
 
-            // URL параметрін тексеру (телефоннан кіргенде)
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('join') === 'true') {
+            // ЖАҢА: Модальды әрқашан көрсету (тексеру үшін)
+            setTimeout(function() {
                 openQrModal();
-            }
+            }, 500);
 
             // QR модальды ашу
             function openQrModal() {
+                console.log("Модаль ашылуда...");
                 qrJoinModal.classList.add('active');
                 qrPlayerName.value = '';
                 qrTimeLeft = 30;
