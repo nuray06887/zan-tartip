@@ -1280,6 +1280,18 @@
             let fiftyFiftyUsed = false;
             let modalActive = false;
 
+            // Топ аттары (сіздің ретіңізбен)
+            const teamNames = [
+                "ҚЫЛМЫСТЫҚ КОДЕКС",
+                "ӘКІМШІЛІК КОДЕКС",
+                "АЗАМАТТЫҚ КОДЕКС",
+                "ЕҢБЕК КОДЕКСІ",
+                "КОНСТИТУЦИЯ",
+                "САЛЫҚ КОДЕКСІ",
+                "НЕКЕ КОДЕКСІ",
+                "БЮДЖЕТ КОДЕКСІ"
+            ];
+
             // LocalStorage-дан қатысушыларды оқу
             function loadParticipants() {
                 const saved = localStorage.getItem('gameParticipants');
@@ -1433,7 +1445,7 @@
                     const team = teamsData[i];
                     html += `<div class="team-card" data-team-index="${i}">
                         <div class="team-title">
-                            ${i+1}-ТОП
+                            ${team.name}  <!-- Заң аты көрсетіледі -->
                             <span class="team-score" id="team-score-${i}">${team.score} Б</span>
                         </div>
                         <div class="team-members">`;
@@ -1486,7 +1498,12 @@
                     activeCard.classList.add('active-team');
                 }
                 
-                currentTeamDisplay.textContent = `${currentTeamIndex+1}-ТОП`;
+                // Ағымдағы топтың заң атын көрсету
+                if (teams.length > 0 && teams[currentTeamIndex]) {
+                    currentTeamDisplay.textContent = teams[currentTeamIndex].name;
+                } else {
+                    currentTeamDisplay.textContent = '1-ТОП';
+                }
             }
 
             function renderBoard() {
@@ -1596,7 +1613,7 @@
                     selectedDiv.classList.add('correct');
                     teams[currentTeamIndex].score += q.points;
                     teams[currentTeamIndex].correct++;
-                    updateOwlMessage(`ДҰРЫС! 🎉 +${q.points} БАЛЛ (${currentTeamIndex+1}-ТОП)`);
+                    updateOwlMessage(`ДҰРЫС! 🎉 +${q.points} БАЛЛ (${teams[currentTeamIndex].name})`);
                 } else {
                     selectedDiv.classList.add('wrong');
                     teams[currentTeamIndex].wrong++;
@@ -1605,7 +1622,7 @@
                             btn.classList.add('correct');
                         }
                     });
-                    updateOwlMessage(`ҚАТЕ! 😕 ЗАҢ БАБЫН ОҚЫ (${currentTeamIndex+1}-ТОП)`);
+                    updateOwlMessage(`ҚАТЕ! 😕 ЗАҢ БАБЫН ОҚЫ (${teams[currentTeamIndex].name})`);
                 }
 
                 hasAnswered = true;
@@ -1634,7 +1651,7 @@
                 
                 usedQuestions[currentQuestionIndex] = true;
                 teams[currentTeamIndex].wrong++;
-                updateOwlMessage(`УАҚЫТ БІТТІ! ⏰ ЗАҢ БАБЫН ОҚЫ (${currentTeamIndex+1}-ТОП)`);
+                updateOwlMessage(`УАҚЫТ БІТТІ! ⏰ ЗАҢ БАБЫН ОҚЫ (${teams[currentTeamIndex].name})`);
                 
                 currentTeamIndex = (currentTeamIndex + 1) % teams.length;
                 
@@ -1696,7 +1713,7 @@
                     showFinalResults();
                 } else {
                     if (teams.length > 0) {
-                        updateOwlMessage(`${currentTeamIndex+1}-ТОП, СҰРАҚ ТАҢДА! 🎯`);
+                        updateOwlMessage(`${teams[currentTeamIndex]?.name || '1-ТОП'}, СҰРАҚ ТАҢДА! 🎯`);
                     }
                 }
             });
@@ -1762,8 +1779,9 @@
                     teamMembers[teamIndex].push(shuffledParticipants[i]);
                 }
                 
+                // Топ аттарын заңға байланысты беру (сіздің ретіңізбен)
                 teams = teamMembers.map((members, index) => ({
-                    name: `${index+1}-ТОП`,
+                    name: teamNames[index % teamNames.length], // Заң аттары
                     members: members,
                     score: 0,
                     correct: 0,
@@ -1799,7 +1817,7 @@
                 }
                 gameContainer.style.display = 'block';
                 renderBoard();
-                updateOwlMessage(`${currentTeamIndex+1}-ТОП, СҰРАҚ ТАҢДА! 🎯`);
+                updateOwlMessage(`${teams[currentTeamIndex]?.name || '1-ТОП'}, СҰРАҚ ТАҢДА! 🎯`);
                 questionCounter.textContent = `📊 Барлығы ${totalQuestions} сұрақ | Әр командаға ${questionsPerTeam} сұрақтан`;
             });
 
