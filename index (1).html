@@ -260,7 +260,7 @@
         </div>
     </div>
 
-    <!-- QR КОД АРҚЫЛЫ ҚОСЫЛУ ҮШІН МОДАЛЬ -->
+    <!-- QR КОД АРҚЫЛЫ ҚОСЫЛУ ҮШІН МОДАЛЬ (ТЕК ТЕЛЕФОНДА КӨРІНЕДІ) -->
     <div class="modal" id="qrJoinModal">
         <div class="modal-content" style="max-width: 400px;">
             <div class="modal-header">
@@ -452,7 +452,7 @@
             // Қатысушылар тізімі
             let participants = [];
 
-            // ЖАҢА: QR код генерациясы (ТҮЗЕТІЛГЕН)
+            // QR код генерациясы (үлкен экранда көрсету үшін)
             const siteUrl = "https://nuray06887.github.io/zan-tartip/";
             new QRCode(document.getElementById("qrcode"), {
                 text: siteUrl + "?join=true",
@@ -460,14 +460,16 @@
                 height: 150
             });
 
-            // ЖАҢА: Модальды әрқашан көрсету (тексеру үшін)
-            setTimeout(function() {
+            // ТЕК ТЕЛЕФОНДА: URL параметрін тексеру
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('join') === 'true') {
+                // Телефоннан кіргенде ғана модаль ашылады
                 openQrModal();
-            }, 500);
+            }
 
-            // QR модальды ашу
+            // QR модальды ашу (тек телефонда)
             function openQrModal() {
-                console.log("Модаль ашылуда...");
+                console.log("Телефоннан қосылу...");
                 qrJoinModal.classList.add('active');
                 qrPlayerName.value = '';
                 qrTimeLeft = 30;
