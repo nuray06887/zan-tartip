@@ -1445,7 +1445,7 @@
                     const team = teamsData[i];
                     html += `<div class="team-card" data-team-index="${i}">
                         <div class="team-title">
-                            ${team.name}  <!-- Заң аты көрсетіледі -->
+                            ${team.name}  <!-- ЗАҢ АТЫ КӨРСЕТІЛЕДІ -->
                             <span class="team-score" id="team-score-${i}">${team.score} Б</span>
                         </div>
                         <div class="team-members">`;
@@ -1501,8 +1501,6 @@
                 // Ағымдағы топтың заң атын көрсету
                 if (teams.length > 0 && teams[currentTeamIndex]) {
                     currentTeamDisplay.textContent = teams[currentTeamIndex].name;
-                } else {
-                    currentTeamDisplay.textContent = '1-ТОП';
                 }
             }
 
@@ -1781,7 +1779,7 @@
                 
                 // Топ аттарын заңға байланысты беру (сіздің ретіңізбен)
                 teams = teamMembers.map((members, index) => ({
-                    name: teamNames[index % teamNames.length], // Заң аттары
+                    name: teamNames[index % teamNames.length], // ЗАҢ АТТАРЫ
                     members: members,
                     score: 0,
                     correct: 0,
